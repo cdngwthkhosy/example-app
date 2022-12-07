@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -34,7 +35,9 @@ class UserController extends Controller
     public function create()
     {
         $units = Unit::get();
-        return view('pages.superadmin.users.create', compact('units'));
+        $roles = Role::get();
+
+        return view('pages.superadmin.users.create', compact('units', 'roles'));
     }
 
     /**
@@ -53,6 +56,7 @@ class UserController extends Controller
             'phone' => 'required|numeric|digits_between:11,12',
             'birthplace' => 'required|string',
             'dob' => 'required|date',
+            'role' => 'required|numeric|not_in:null',
             'education' => 'required|string|in:SD/SMP,SMA/SMK,D3,S1,S2,S3|not_in:null',
             'unit_id' => 'required|numeric|not_in:null',
             'password' => 'required'
@@ -79,7 +83,7 @@ class UserController extends Controller
             'password' => Hash::make($validatedData['password']) 
         ]);
 
-        $user->assignRole('user');
+        $user->assignRole($validatedData['role']);
 
         if ($user) {
             return redirect(route('admin.manajemen.user'))->with('user_success', 'User telah berhasil ditambahkan 😆');
@@ -107,10 +111,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {   
-        $user = User::where('id', $id)->get();
+        $user = User::where('id', $id)->with('roles')->get();
         $units = Unit::get();
+        $roles = Role::get();
 
-        return view('pages.superadmin.users.edit', compact('user', 'units'));
+        return view('pages.superadmin.users.edit', compact('user', 'units', 'roles'));
     }
 
     /**
@@ -129,12 +134,13 @@ class UserController extends Controller
             'phone' => 'numeric|digits_between:11,12',
             'birthplace' => 'string',
             'dob' => 'date',
+            'role' => 'numeric|not_in:null',
             'education' => 'string|in:SD/SMP,SMA/SMK,D3,S1,S2,S3|not_in:null',
             'tmt' => 'date',
             'unit_id' => 'numeric|not_in:null',
             // 'password' => 'string'
         ]);
-
+        // dd($validatedData['role']);
         $user = User::where('id', $id)->update([
             'name' => $validatedData['name'],
             'phone' => $validatedData['phone'],
@@ -145,6 +151,10 @@ class UserController extends Controller
             'unit_id' => $validatedData['unit_id'],
             'password' => Hash::make($request['password']),
         ]);
+
+        if ($validatedData['role']) {
+            User::find($id)->syncRoles($validatedData['role']);
+        }
 
         if ($user) {
             return redirect(route('admin.manajemen.user'))->with('updated_user', 'User telah diperbaharui 😆');

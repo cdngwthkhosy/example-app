@@ -21,7 +21,7 @@
     <div class="col-12">
       <div class="card card-borderless">
         <div class="card-body">
-          @foreach ($user as $u)                
+          @foreach ($user as $u)        
           <form action={{route('admin.manajemen.user.update', ['id' => $u->id])}} method="POST">
             @csrf
             <div class="row mb-2">
@@ -56,19 +56,34 @@
                 <span class="text-danger text-sm">{{$message}}</span>
                 @enderror
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <label for="birthplace" class="form-label">Tempat Lahir</label>
                 <input type="text" class="form-control" id="birthplace" name="birthplace" value="{{$u->birthplace}}">
                 @error('birthplace')
                 <span class="text-danger text-sm">{{$message}}</span>
                 @enderror
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <label for="dob" class="form-label">Tanggal Lahir</label>
                 <input type="date" class="form-control" id="dob" name="dob" value="{{$u->dob}}">
                 @error('dob')
                 <span class="text-danger text-sm">{{$message}}</span>
                 @enderror
+              </div>
+              <div class="col-md-3">
+                <label for="role" class="form-label">Role</label>
+                <select name="role" id="role" class="form-select @error('role') is-invalid @enderror">
+                  <option value="null">Pilih Role</option>
+                  @foreach ($roles as $role)
+                  @foreach ($u->roles as $i)
+                  @if ($i->id == $role->id)
+                  <option value={{$role->id}} selected>{{$role->name}}</option>
+                  @else
+                  <option value={{$role->id}}>{{$role->name}}</option>
+                  @endif
+                  @endforeach
+                  @endforeach
+                </select>
               </div>
             </div>
 

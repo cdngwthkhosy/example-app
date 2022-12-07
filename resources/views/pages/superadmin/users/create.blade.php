@@ -55,19 +55,28 @@
                 <span class="text-danger text-sm">{{$message}}</span>
                 @enderror
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <label for="birthplace" class="form-label">Tempat Lahir</label>
                 <input type="text" class="form-control" id="birthplace" name="birthplace">
                 @error('birthplace')
                 <span class="text-danger text-sm">{{$message}}</span>
                 @enderror
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <label for="dob" class="form-label">Tanggal Lahir</label>
                 <input type="date" class="form-control" id="dob" name="dob">
                 @error('dob')
                 <span class="text-danger text-sm">{{$message}}</span>
                 @enderror
+              </div>
+              <div class="col-md-3">
+                <label for="role" class="form-label">Role</label>
+                <select name="role" id="role" class="form-select @error('role') is-invalid @enderror">
+                  <option value="null">Pilih Role</option>
+                  @foreach ($roles as $role)
+                  <option value={{$role->id}}>{{$role->name}}</option>
+                  @endforeach
+                </select>
               </div>
             </div>
 
@@ -96,7 +105,7 @@
                 <label for="unit_id" class="form-label">Unit</label>
                 <select name="unit_id" id="unit_id" class="form-select @error('unit_id') is-invalid @enderror">
                   <option value="null">Pilih Unit</option>
-                  @foreach ($units as $unit)s
+                  @foreach ($units as $unit)
                   <option value={{$unit->id}}>{{$unit->name}}</option>
                   @endforeach
                 </select>

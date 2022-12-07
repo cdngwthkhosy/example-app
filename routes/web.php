@@ -36,6 +36,7 @@ Route::middleware('auth', 'role:pendidik|tenaga-kependidikan|staff')->prefix('us
 });
 
 Route::middleware('auth', 'role:super-admin')->prefix('admin')->name('admin.')->group(function () {
+    // MANAJEMEN USER
     Route::get('/manajemen/user', [UserController::class, 'index'])->name('manajemen.user');
     Route::get('/manajemen/user/delete/{id}', [UserController::class, 'destroy'])->name('manajemen.user.destroy');
     Route::get('/manajemen/user/create', [UserController::class, 'create'])->name('manajemen.user.create');
@@ -43,9 +44,11 @@ Route::middleware('auth', 'role:super-admin')->prefix('admin')->name('admin.')->
     Route::get('/manajemen/user/edit/{id}', [UserController::class, 'edit'])->name('manajemen.user.edit');
     Route::post('/manajemen/user/update/{id}', [UserController::class, 'update'])->name('manajemen.user.update');
 
+    // MANAJEMEN MUTABAAH
     Route::get('/manajemen/mutabaah', [AdminMutabaahController::class, 'index'])->name('manajemen.mutabaah');
     Route::post('/manajemen/mutabaah/show', [AdminMutabaahController::class, 'show'])->name('manajemen.mutabaah.show');
 
-    Route::get('/manajemen/mutabaah/filter', [AdminMutabaahController::class, 'filter'])->name('manajemen.mutabaah.show.filter');
+    // MANAJEMEN ROLE
+    
 });
 
