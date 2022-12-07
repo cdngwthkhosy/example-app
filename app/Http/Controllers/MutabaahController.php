@@ -103,16 +103,18 @@ class MutabaahController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show(Request $request)
     {
         $startDate = Carbon::now()->startOfMonth();
         $endDate = Carbon::now()->endOfMonth();
         $mutabaahData = Mutabaah::where('user_id', Auth::user()->id)->whereBetween('tanggal_isi', [$startDate, $endDate])->get();
 
-        if (request()->date_filter) {
-            $date = new Carbon(request()->date_filter);
-            $startDate = $date->startOfMonth();
-            $endDate = $date->endOfMonth();
+        if (request()->cari_data) {
+            $startDate = new Carbon($request->cari_data);
+            $endDate = new Carbon($request->cari_data);
+
+            $startDate = $startDate->startOfMonth();
+            $endDate = $endDate->endOfMonth();
 
             $mutabaahData = Mutabaah::where('user_id', Auth::user()->id)->whereBetween('tanggal_isi', [$startDate, $endDate])->get();
         }

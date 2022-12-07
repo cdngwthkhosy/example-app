@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Mutabaah;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 use function GuzzleHttp\Promise\all;
 
@@ -17,8 +18,10 @@ class AdminMutabaahController extends Controller
      */
     public function index()
     {
-        $users = User::get();
-        
+        $users = User::whereHas('roles', function($query) {
+            $query->where('name', '!=' ,'super-admin');
+        })->get();
+
         return view('pages.superadmin.mutabaah', compact('users'));
     }
 
@@ -51,7 +54,29 @@ class AdminMutabaahController extends Controller
      */
     public function show(Request $request)
     {
-        // $mutabaahData = ;
+        $startDate = Carbon::now()->startOfMonth();
+        $endDate = Carbon::now()->endOfMonth();
+
+        $mutabaahData = Mutabaah::where('user_id', $request->user)->whereBetween('tanggal_isi', [$startDate, $endDate])->with('user')->get();
+
+        // $userData = User::where('id', $request->user)->get();
+
+        if (request()->cari_data) {
+            $startDate = new Carbon($request->cari_data);
+            $endDate = new Carbon($request->cari_data);
+
+            $startDate = $startDate->startOfMonth();
+            $endDate = $endDate->endOfMonth();
+
+            $mutabaahData = Mutabaah::where('user_id', 2)->whereBetween('tanggal_isi', [$startDate, $endDate])->with('user')->get();
+        }
+
+        return view('pages.superadmin.mutabaah.show', compact('mutabaahData'));
+    }
+
+    public function filter(Request $request)
+    {
+        return view('pages.superadmin.mutabaah.show', compact('mutabaahData', 'userData'));
     }
 
     /**

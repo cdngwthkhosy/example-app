@@ -45,5 +45,7 @@ Route::middleware('auth', 'role:super-admin')->prefix('admin')->name('admin.')->
 
     Route::get('/manajemen/mutabaah', [AdminMutabaahController::class, 'index'])->name('manajemen.mutabaah');
     Route::post('/manajemen/mutabaah/show', [AdminMutabaahController::class, 'show'])->name('manajemen.mutabaah.show');
+
+    Route::get('/manajemen/mutabaah/filter', [AdminMutabaahController::class, 'filter'])->name('manajemen.mutabaah.show.filter');
 });
 

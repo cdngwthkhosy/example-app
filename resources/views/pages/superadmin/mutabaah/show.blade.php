@@ -6,7 +6,7 @@
   <div class="container-xl">
     <div class="row g-2 align-items-center">
       <div class="col">
-        <h3 class="page-pretitle text-success">Rekap (USER)</h3>
+        <h3 class="page-pretitle text-success">Report (ADMIN)</h3>
         <h2 class="page-title">
           Mutabaah
         </h2>
@@ -21,11 +21,17 @@
     <div class="col-12">
       <div class="card card-borderless">
         <div class="card-body">
-          <form action="{{route('user.report.mutabaah')}}" method="get">
+          <div class="row mb-3">
+            @foreach ($mutabaahData as $data)
+              <strong> Nama  : {{$data->user->name}} </strong><br>
+              <strong> NIK   : {{$data->user->nik}} </strong>
+            @endforeach
+          </div>
+          <form action="{{route('admin.manajemen.mutabaah.show')}}" method="post">
             <div class="row mb-4">
               <div class="col-md-3">
                 @csrf
-                <input type="month" class="form-control" name="cari_data">
+                <input type="month" class="form-control" name="cari_data" id="cari_data">
               </div>
               <div class="col-md-3">
                 <button type="submit" class="btn btn-outline-primary">Filter</button>

@@ -18,7 +18,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::get();
+        $users = User::whereHas('roles', function($query) {
+            $query->where('name', '!=' ,'super-admin');
+        })->get();
         $units = Unit::get();
 
         return view('pages.superadmin.user', compact('users', 'units'));
