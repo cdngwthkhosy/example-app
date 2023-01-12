@@ -20,7 +20,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login');
 Route::get('/login', [AuthController::class, 'index'])->name('login');
-Route::post('/login', [AuthController::class, 'store'])->name('post.login');
+// Route::post('/login', [AuthController::class, 'store'])->name('post.login');
+// Google Login
+Route::get('login-google', [AuthController::class, 'google'])->name('login.google');
+Route::get('auth/google/callback', [AuthController::class, 'handleProviderCallback'])->name('login.google.callback');
 
 Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth')->name('logout');
 

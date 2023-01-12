@@ -31,7 +31,7 @@ class User extends Authenticatable
         'education',
         'tmt',
         'unit_id',
-        'password',
+        'email_verified_at',
     ];
 
     /**

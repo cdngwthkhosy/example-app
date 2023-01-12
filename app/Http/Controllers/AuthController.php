@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\User;
+use Laravel\Socialite\Facades\Socialite;
+
 class AuthController extends Controller
 {
     /**
@@ -97,5 +100,23 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function google() {
+        return Socialite::driver('google')->with(['hd' => 'cendekiamuda.sch.id'])->redirect();
+    }
+
+    public function handleProviderCallback() {
+        $callback = Socialite::driver('google')->stateless()->user();
+        $data = [
+            'name' => $callback->getName(),
+            'email' => $callback->getEmail(),
+            'email_verified_at' => date('Y-m-d H:i:s', time()),
+        ];
+
+        $user = User::firstOrCreate(['email' => $data['email']], $data);
+        Auth::login($user);
+
+        return redirect(route('dashboard'));
     }
 }
